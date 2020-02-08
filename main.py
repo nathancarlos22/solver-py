@@ -1,10 +1,13 @@
 import numpy as np
 from scipy.optimize import linprog
+from ortools.linear_solver import pywraplp
 
-x = input("variaveis e restricoes: ").split(' ')
+x1 = input("variaveis e restricoes: ").split(' ')
 
 c = input("Coecicientes das variaveis na funcao objetivo: ").split(' ')
-rest = int(x[1])
+
+rest = int(x1[1])
+var = int(x1[0])
 
 a = [0]*rest #inicializando array com o numero de restricoes
 b = [0]*rest 
@@ -17,15 +20,61 @@ for i in range(rest):
     #print(b)
     
 
-# A = np.array(a)
-# B = np.array(b)
-# C = np.array(c)
+#convertendo os arrays em double
+a = np.double( a )
+#a = a.astype('double')
 
+b = np.double(b)
+#b = b.astype('double')
 
-res = linprog(c, A_ub=a, b_ub=b,bounds=(0, None))
+c = np.double( c )
+#c = c.astype('double')
 
-print ("Valor otimo: ", res.fun)
-print ("X:")
-for k, xk in enumerate(res.x):
-    print ("x_{", str(k+1), "} = ", xk)
+print(a, b, c)
 
+def create_data_model():
+  data = {}
+  data['constraint_coeffs'] = a
+  data['bounds'] = b
+  data['obj_coeffs'] = c
+  data['num_vars'] = var
+  data['num_constraints'] = rest
+  return data
+
+def main():
+    data = create_data_model()
+
+    #modelo inteiro MIXED_INTEGER_PROGRAMMING
+    solver = pywraplp.Solver('simple_mip_program', pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
+
+    infinity = solver.infinity()
+    x = {}
+    for j in range(data['num_vars']):
+        x[j] = solver.IntVar(0, infinity, 'x[%i]' % j)
+    print('Numero de variaveis =', solver.NumVariables())
+
+    for i in range(data['num_constraints']):
+        constraint = solver.RowConstraint(data['bounds'][i], infinity, '')#limite superior, inferior e nome da restrição
+        for j in range(data['num_vars']):
+            constraint.SetCoefficient(x[j], data['constraint_coeffs'][i][j]) 
+    print('Numero de restriçoes =', solver.NumConstraints())
+    
+    objective = solver.Objective()
+    for j in range(data['num_vars']):
+        objective.SetCoefficient(x[j], data['obj_coeffs'][j])
+    objective.SetMinimization()
+
+    status = solver.Solve()
+
+    if status == pywraplp.Solver.OPTIMAL:
+        print('Objective value =', solver.Objective().Value())
+        for j in range(data['num_vars']):
+            print(x[j].name(), ' = ', x[j].solution_value())
+        print()
+        print('Problema resolvido em %f milliseconds' % solver.wall_time())
+        print('Problema resolvido em %d iteracoes' % solver.iterations())
+        print('Problema resolvido em %d branch-and-bound nodes' % solver.nodes())
+    else:
+        print('Nao tem solucao otima.')
+
+main()
