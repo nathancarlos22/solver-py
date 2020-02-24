@@ -52,7 +52,7 @@ a = np.double( a )
 b = np.double( b )
 c = np.double( c )
 
-print(a, b, c)
+#print(a, b, c)
 
 """# **Definindo tipos**
 
@@ -144,6 +144,7 @@ def main(IntOrNot, LessMoreOrEqual, MaxOrMin):
   else:
       print('Nao tem solucao otima.')
 
+
 main(IntOrNot, LessMoreOrEqual, MaxOrMin)
 
 """# **Dual**"""
@@ -159,8 +160,8 @@ IntOrNot = False
 LessMoreOrEqual = 'LessOrEqual'
 MaxOrMin = 'Max'
 
+print("========= DUAL =========")
 print(aT, bT, cT, num_varsT, num_restT)
-
 data = create_data_model(aT, bT, cT, num_varsT, num_restT)
 
 main(IntOrNot, LessMoreOrEqual, MaxOrMin)
