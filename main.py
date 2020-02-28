@@ -174,9 +174,9 @@ data = create_data_model(aT, bT, cT, num_varsT, num_restT)
 print("========== DUAL ==========")
 solution_dual = main(IntOrNot, LessMoreOrEqual, MaxOrMin)
 
-"""# **Variaveis de folga e excessos**"""
+"""# **Variaveis de folga e excesso**"""
 
-def FolgasOrExces(solution, a, b):
+def FolgasOrExces(solution, a, b): #Valores da solução, Restrições, lado direito da igualdade
   folgasOuExcesso=[]
   
   print("Restrições: ", a)
@@ -208,13 +208,13 @@ def complementares (solution, folgasOrExcess):
   complemento = []
 
   for i in range (len(solution)):
-    complemento.append(solution[i]*folgasOrExcess[i]) #Multiplicação do valor da solulçao vezes a folga ou excesso do complementar
+    complemento.append(solution[i]*folgasOrExcess[i]) #Multiplicação do valor da solulçao vezes a folga/excesso do complementar
   
   return complemento
 
 complementar_primal = complementares(solution_primal, folgas_ou_excesso_dual)
-print("Valor da solução vezes o complementar excesso/folga: ", complementar_primal)
+print("Variáveis X da solução vezes o complementar excesso/folga do dual: ", complementar_primal)
 
 complementar_dual = complementares(solution_dual, folgas_ou_excesso_primal)
-print("Valor da solução do dual vezes o complementar excesso/folga: ", complementar_dual)
+print("Variáveis Y da solução do dual vezes o complementar excesso/folga: ", complementar_dual)
 
