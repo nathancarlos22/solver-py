@@ -1,4 +1,4 @@
-# simplex-py
+# solver-py
 
 # Bibliotecas usadas:
 
