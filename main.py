@@ -215,6 +215,6 @@ def complementares (solution, folgasOrExcess):
 complementar_primal = complementares(solution_primal, folgas_ou_excesso_dual)
 print("Valor da solução vezes o complementar excesso/folga: ", complementar_primal)
 
-complementar_dual = complementares(solution_primal, folgas_ou_excesso_dual)
+complementar_dual = complementares(solution_dual, folgas_ou_excesso_primal)
 print("Valor da solução do dual vezes o complementar excesso/folga: ", complementar_dual)
 
